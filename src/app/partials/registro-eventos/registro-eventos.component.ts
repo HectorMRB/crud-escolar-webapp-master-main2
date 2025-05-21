@@ -20,7 +20,7 @@ export class EventosComponent implements OnInit {
   public responsables: any[] = [];
   public mostrarResponsable: boolean = false;
 
-
+public fechaHoy: Date = new Date();
   
 
   public programas: string[] = [
@@ -60,6 +60,8 @@ export class EventosComponent implements OnInit {
 ngOnInit(): void {
   const id = this.activatedRoute.snapshot.params['id'];
 
+  this.fechaHoy.setHours(0, 0, 0, 0); // Asegura que no haya horas para evitar errores con la comparación
+
   if (id !== undefined) {
     this.editar = true;
     this.evento = { ...this.datos_evento };
@@ -72,8 +74,7 @@ ngOnInit(): void {
 
   this.obtenerResponsables();
   this.mostrarResponsable = this.evento.publico_objetivo?.includes('Estudiantes');
-
-} 
+}
 
 public obtenerResponsables(): void {
   this.eventosService.obtenerUsuariosResponsables().subscribe({
@@ -137,21 +138,22 @@ public obtenerResponsables(): void {
       cupo_max: cupo
     };
 
-    if (
-      !body.titulo || !body.tipo_de_evento || !body.fecha_de_realizacion || !body.publico_objetivo ||
-      !body.programa_educativo || !body.descripcion_breve || body.cupo_max == null
-    ) {
-      alert("Por favor completa todos los campos obligatorios.");
-      return null;
-    }
-
-    if (body.cupo_max <= 0 || body.cupo_max > 999) {
-      alert("El cupo máximo debe ser un número entre 1 y 999.");
-      return null;
-    }
-
-    return body;
+  if (
+    !body.titulo || !body.tipo_de_evento || !body.fecha_de_realizacion || !body.lugar || 
+    !body.publico_objetivo || !body.programa_educativo || !body.descripcion_breve || body.cupo_max == null
+  ) {
+    alert("Por favor completa todos los campos obligatorios.");
+    return null;
   }
+
+  if (body.cupo_max <= 0 || body.cupo_max > 999) {
+    alert("El cupo máximo debe ser un número entre 1 y 999.");
+    return null;
+  }
+
+  return body;
+}
+  
 
   public registrar(): void {
     const body = this.construirBodyEvento();

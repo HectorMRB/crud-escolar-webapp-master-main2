@@ -33,13 +33,21 @@
 
 
       <!-- Fecha de realización -->
+<!-- Fecha de realización--> 
 <mat-form-field class="mat-input" appearance="outline">
   <mat-label>Fecha de realización</mat-label>
-  <input matInput [matDatepicker]="pickerRealizacion" [(ngModel)]="evento.fecha_de_realizacion" (focus)="pickerRealizacion.open()" (dateChange)="changeFechaRealizacion($event)">
+  <input matInput 
+         [matDatepicker]="pickerRealizacion" 
+         [(ngModel)]="evento.fecha_de_realizacion"
+         [min]="fechaHoy"
+         (focus)="pickerRealizacion.open()" 
+         (dateChange)="changeFechaRealizacion($event)">
   <mat-datepicker-toggle matSuffix [for]="pickerRealizacion"></mat-datepicker-toggle>
   <mat-datepicker #pickerRealizacion></mat-datepicker>
 </mat-form-field>
 <div *ngIf="errors.fecha_de_realizacion" class="invalid-feedback">{{ errors.fecha_de_realizacion }}</div>
+
+
 
 <!-- Hora de inicio -->
 <mat-form-field class="mat-input" appearance="outline">
@@ -59,12 +67,25 @@
 </mat-form-field>
 <div *ngIf="errors.hora_fin" class="invalid-feedback">{{ errors.hora_fin }}</div>
 
-      <!-- Lugar -->
-      <mat-form-field class="mat-input" appearance="outline">
-        <mat-label>Lugar</mat-label>
-        <input matInput [(ngModel)]="evento.lugar" placeholder="Ej. Auditorio, Salón 3, etc.">
-      </mat-form-field>
-      <div *ngIf="errors.lugar" class="invalid-feedback">{{ errors.lugar }}</div>
+
+
+    <!-- Lugar -->
+<mat-form-field class="mat-input" appearance="outline">
+  <mat-label>Lugar</mat-label>
+  <input matInput
+         name="lugar"
+         [(ngModel)]="evento.lugar"
+         #lugar="ngModel"
+         required
+         placeholder="Ej. Auditorio, Salón 3, etc.">
+</mat-form-field>
+
+<!-- Error si está vacío -->
+<div *ngIf="(lugar.invalid && lugar.touched) || errors.lugar" class="invalid-feedback">
+  {{ errors.lugar || 'El lugar es obligatorio.' }}
+</div>
+
+
 
             <!-- Público objetivo -->
       <div class="checkbox-group">
